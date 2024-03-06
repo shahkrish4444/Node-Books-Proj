@@ -1,0 +1,76 @@
+<%- include('../Partials/Header.ejs') -%>
+  <div class="d-flex justify-content-center align-items-center my-5">
+    <div class="w-50 p-4 rounded-4 bg-primary">
+      <form action="/updatebook/<%= book._id %>" method="post" class="w-100" id="updateForm">
+        <h4 class="text-light mb-3 text-center">Update Book Details</h4>
+        <p id="error" class="mb-4 text-center text-danger"></p>
+        <div class="mb-3">
+          <input type="text" name="title" class="form-control" placeholder="TITLE" id="title" value="<%= book.title %>">
+        </div>
+        <div class="mb-3">
+          <select name="type" class="form-select" id="type">
+            <option value="">--SELECT TYPE--</option>
+            <% ['Rich Dad and Poor Dad', 'Trading' , 'Cartoons' , 'Poems' , 'Mind Games' , 'Novel'
+              ].forEach(type=> { %>
+              <option value="<%= type %>" <%=book.type===type ? 'selected' : '' %>><%= type %>
+              </option>
+              <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <div class="d-flex align-items-center form-control p-2">
+            <label class="me-4">STOCK : </label>
+            <div class="form-check me-4">
+              <input class="form-check-input" name="stock" type="radio" id="av" value="Available" <%=book.stock
+                ? 'checked' : '' %>>
+              <label class="form-check-label" for="av">AVAILABLE</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="stock" id="noav" value="Not Available" <%=!book.stock
+                ? 'checked' : '' %>>
+              <label class="form-check-label" for="noav">NOT AVAILABLE</label>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <input type="number" name="price" class="form-control" placeholder="PRICE" id="price"
+            value="<%= book.price %>">
+        </div>
+        <div class="mb-3">
+          <input type="date" name="published" class="form-control" id="published"
+            value="<%= book.published ? book.published.toISOString().substring(0, 10) : '' %>">
+        </div>
+        <div class="mb-3">
+          <input type="text" name="author" class="form-control" placeholder="AUTHOR NAME" id="author"
+            value="<%= book.author %>">
+        </div>
+        <button type="submit" class="btn btn-outline-light">Update</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    document.getElementById('updateForm').onsubmit = function (event) {
+      var title = document.getElementById('title').value;
+      var type = document.getElementById('type').value;
+      var stockRadios = document.getElementsByName('stock');
+      var price = document.getElementById('price').value;
+      var published = document.getElementById('published').value;
+      var author = document.getElementById('author').value;
+
+      var stockSelected = false;
+      for (var i = 0; i < stockRadios.length; i++) {
+        if (stockRadios[i].checked) {
+          stockSelected = true;
+          break;
+        }
+      }
+
+      if (!title || !type || !stockSelected || !price || !published || !author) {
+        document.getElementById('error').textContent = 'Please fill out all fields.';
+        event.preventDefault();
+      } else {
+        document.getElementById('error').textContent = '';
+      }
+    };
+  </script>
+  <%- include('../Partials/Footer.ejs') -%>
